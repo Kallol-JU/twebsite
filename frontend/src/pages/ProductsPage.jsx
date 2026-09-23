@@ -19,7 +19,7 @@ const ProductsPage = () => {
   const PHONE_NUMBER = "919876543210";
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${import.meta.env.VITE_API_URL}/api/products`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();

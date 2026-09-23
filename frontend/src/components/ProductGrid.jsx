@@ -7,7 +7,7 @@ const ProductGrid = () => {
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/product-knowledge")
+    fetch(`${import.meta.env.VITE_API_URL}/api/product-knowledge`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch from backend");
         return res.json();

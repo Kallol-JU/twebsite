@@ -7,7 +7,7 @@ const MonthlyOffersBook = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/offer-hero")
+    fetch(`${import.meta.env.VITE_API_URL}/api/offer-hero`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();

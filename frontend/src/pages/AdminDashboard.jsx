@@ -83,10 +83,10 @@ const AdminDashboard = () => {
     try {
       const [knowledgeRes, productRes, recentRes, offerRes] = await Promise.all(
         [
-          fetch("http://localhost:5000/api/product-knowledge"),
-          fetch("http://localhost:5000/api/products"),
-          fetch("http://localhost:5000/api/recent-videos"),
-          fetch("http://localhost:5000/api/offer-hero"), // Fetch OfferHero
+          fetch(`${import.meta.env.VITE_API_URL}/api/product-knowledge`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/products`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/recent-videos`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/offer-hero`), // Fetch OfferHero
         ],
       );
       const kData = await knowledgeRes.json();
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/login", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://localhost:5000/api/catalogue", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/catalogue`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,8 +167,8 @@ const AdminDashboard = () => {
     setIsSubmitting(true);
     const method = editingKnowledgeId ? "PUT" : "POST";
     const url = editingKnowledgeId
-      ? `http://localhost:5000/api/product-knowledge/${editingKnowledgeId}`
-      : "http://localhost:5000/api/product-knowledge";
+      ? `${import.meta.env.VITE_API_URL}/api/product-knowledge/${editingKnowledgeId}`
+      : `${import.meta.env.VITE_API_URL}/api/product-knowledge`;
     try {
       const res = await fetch(url, {
         method,
@@ -197,10 +197,13 @@ const AdminDashboard = () => {
   const deleteKnowledge = async (id) => {
     if (!window.confirm("Delete this video post?")) return;
     try {
-      await fetch(`http://localhost:5000/api/product-knowledge/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/api/product-knowledge/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       showMessage("Deleted successfully", "success");
       fetchExistingData();
     } catch (err) {
@@ -226,8 +229,8 @@ const AdminDashboard = () => {
     setIsSubmitting(true);
     const method = editingProductId ? "PUT" : "POST";
     const url = editingProductId
-      ? `http://localhost:5000/api/products/${editingProductId}`
-      : "http://localhost:5000/api/products";
+      ? `${import.meta.env.VITE_API_URL}/api/products/${editingProductId}`
+      : `${import.meta.env.VITE_API_URL}/api/products`;
     try {
       const res = await fetch(url, {
         method,
@@ -256,7 +259,7 @@ const AdminDashboard = () => {
   const deleteProduct = async (id) => {
     if (!window.confirm("Remove this product?")) return;
     try {
-      await fetch(`http://localhost:5000/api/products/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -286,8 +289,8 @@ const AdminDashboard = () => {
     setIsSubmitting(true);
     const method = editingRecentId ? "PUT" : "POST";
     const url = editingRecentId
-      ? `http://localhost:5000/api/recent-videos/${editingRecentId}`
-      : "http://localhost:5000/api/recent-videos";
+      ? `${import.meta.env.VITE_API_URL}/api/recent-videos/${editingRecentId}`
+      : `${import.meta.env.VITE_API_URL}/api/recent-videos`;
     try {
       const dataToSubmit = editingRecentId
         ? recentData
@@ -319,7 +322,7 @@ const AdminDashboard = () => {
   const deleteRecent = async (id) => {
     if (!window.confirm("Remove this video from Home?")) return;
     try {
-      await fetch(`http://localhost:5000/api/recent-videos/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/recent-videos/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -357,7 +360,7 @@ const AdminDashboard = () => {
     setRecentList(newList);
     try {
       const orderedIds = newList.map((vid) => vid._id);
-      await fetch("http://localhost:5000/api/recent-videos/reorder", {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/recent-videos/reorder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -377,8 +380,8 @@ const AdminDashboard = () => {
     setIsSubmitting(true);
     const method = editingOfferId ? "PUT" : "POST";
     const url = editingOfferId
-      ? `http://localhost:5000/api/offer-hero/${editingOfferId}`
-      : "http://localhost:5000/api/offer-hero";
+      ? `${import.meta.env.VITE_API_URL}/api/offer-hero/${editingOfferId}`
+      : `${import.meta.env.VITE_API_URL}/api/offer-hero`;
 
     const dataToSubmit = editingOfferId
       ? offerData
@@ -412,7 +415,7 @@ const AdminDashboard = () => {
   const deleteOffer = async (id) => {
     if (!window.confirm("Delete this offer?")) return;
     try {
-      await fetch(`http://localhost:5000/api/offer-hero/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/offer-hero/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -452,7 +455,7 @@ const AdminDashboard = () => {
     setOfferList(newList);
     try {
       const orderedIds = newList.map((offer) => offer._id);
-      await fetch("http://localhost:5000/api/offer-hero/reorder", {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/offer-hero/reorder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

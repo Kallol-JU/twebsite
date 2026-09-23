@@ -7,7 +7,7 @@ const OffersPage = () => {
   const [iframeLoaded, setIframeLoaded] = useState(false); // Tracks flipbook readiness
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/catalogue/active")
+    fetch(`${import.meta.env.VITE_API_URL}/api/catalogue/active`)
       .then((res) => {
         if (!res.ok) throw new Error("No active offers found");
         return res.json();

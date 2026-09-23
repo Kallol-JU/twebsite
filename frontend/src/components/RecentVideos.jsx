@@ -5,10 +5,10 @@ const RecentVideos = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const youtubeChannelUrl = "https://youtube.com/@YOUR_AUNTS_CHANNEL_ID";
+  const youtubeChannelUrl = "https://www.youtube.com/@taanusree1653/videos";
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/recent-videos")
+    fetch(`${import.meta.env.VITE_API_URL}/api/recent-videos`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
