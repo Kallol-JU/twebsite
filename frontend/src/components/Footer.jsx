@@ -65,7 +65,7 @@ const Footer = () => {
       {/* Left Side: Social Icons */}
       <div className="w-full md:w-1/3 flex items-center justify-center md:justify-start gap-6 text-gray-400">
         <a
-          href="#"
+          href="https://www.facebook.com/share/1Bwb1ivHka/"
           target="_blank"
           rel="noreferrer"
           className="hover:text-gray-900 transition-colors"
@@ -74,7 +74,7 @@ const Footer = () => {
           <FacebookIcon />
         </a>
         <a
-          href="#"
+          href="https://www.instagram.com/tanusreesbeautyandbusiness/?utm_source=ig_web_button_share_sheet"
           target="_blank"
           rel="noreferrer"
           className="hover:text-gray-900 transition-colors"
@@ -83,7 +83,7 @@ const Footer = () => {
           <InstagramIcon />
         </a>
         <a
-          href="#"
+          href="https://www.youtube.com/@taanusree1653/videos"
           target="_blank"
           rel="noreferrer"
           className="hover:text-gray-900 transition-colors"

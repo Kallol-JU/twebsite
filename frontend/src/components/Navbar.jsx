@@ -7,10 +7,10 @@ const Navbar = () => {
         to="/"
         className="text-sm font-semibold tracking-tight hover:text-gray-600 transition-colors"
       >
-        tanusree.
+        tanusree
       </Link>
       <div className="flex gap-6 text-sm text-gray-500 font-mono">
-        <Link to="/offers" className="hover:text-gray-900 transition-colors">
+        <Link to="/catalogue" className="hover:text-gray-900 transition-colors">
           e-catalogue
         </Link>
         <Link to="/knowledge" className="hover:text-gray-900 transition-colors">

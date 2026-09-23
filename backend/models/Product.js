@@ -5,7 +5,19 @@ const productSchema = new mongoose.Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
-    priceText: { type: String, default: "Lower than the market" },
+    category: {
+      type: String,
+      required: true,
+      default: "Skincare",
+    },
+    isOnSale: {
+      type: Boolean,
+      default: false,
+    },
+    saleText: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true },
 );

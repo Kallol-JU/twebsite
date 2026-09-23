@@ -52,7 +52,14 @@ const AdminDashboard = () => {
   };
   const [knowledgeData, setKnowledgeData] = useState(emptyKnowledge);
 
-  const emptyProduct = { name: "", description: "", imageUrl: "" };
+  const emptyProduct = {
+    name: "",
+    description: "",
+    imageUrl: "",
+    category: "Skincare",
+    isOnSale: false,
+    saleText: "",
+  };
   const [productData, setProductData] = useState(emptyProduct);
 
   const emptyRecent = { title: "", sourceUrl: "", thumbnailUrl: "" };
@@ -265,6 +272,9 @@ const AdminDashboard = () => {
       name: prod.name,
       description: prod.description,
       imageUrl: prod.imageUrl,
+      category: prod.category || "Skincare",
+      isOnSale: prod.isOnSale || false,
+      saleText: prod.saleText || "",
     });
     setEditingProductId(prod._id);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1028,21 +1038,48 @@ const AdminDashboard = () => {
                   </button>
                 )}
               </div>
-              <div>
-                <label className="block text-xs font-mono text-gray-500 mb-1">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  value={productData.name}
-                  onChange={(e) =>
-                    setProductData({ ...productData, name: e.target.value })
-                  }
-                  className="w-full border border-gray-200 p-2 text-sm"
-                  required
-                  disabled={isSubmitting}
-                />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-gray-500 mb-1">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={productData.name}
+                    onChange={(e) =>
+                      setProductData({ ...productData, name: e.target.value })
+                    }
+                    className="w-full border border-gray-200 p-2 text-sm"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-gray-500 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={productData.category}
+                    onChange={(e) =>
+                      setProductData({
+                        ...productData,
+                        category: e.target.value,
+                      })
+                    }
+                    className="w-full border border-gray-200 p-2 text-sm"
+                    disabled={isSubmitting}
+                  >
+                    <option value="Skincare">Skincare</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Haircare">Haircare</option>
+                    <option value="Oriflame Special Edition Accessories">
+                      Oriflame Special Edition Accessories
+                    </option>
+                  </select>
+                </div>
               </div>
+
               <div>
                 <label className="block text-xs font-mono text-gray-500 mb-1">
                   Description
@@ -1075,6 +1112,54 @@ const AdminDashboard = () => {
                   disabled={isSubmitting}
                 />
               </div>
+
+              {/* SALE OPTIONS */}
+              <div className="p-4 bg-gray-50 border border-gray-200 space-y-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="saleStatus"
+                    checked={productData.isOnSale}
+                    onChange={(e) =>
+                      setProductData({
+                        ...productData,
+                        isOnSale: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 cursor-pointer"
+                    disabled={isSubmitting}
+                  />
+                  <label
+                    htmlFor="saleStatus"
+                    className="text-sm font-semibold text-gray-900 cursor-pointer"
+                  >
+                    Put this product on sale
+                  </label>
+                </div>
+
+                {productData.isOnSale && (
+                  <div>
+                    <label className="block text-xs font-mono text-gray-500 mb-1">
+                      Sale Details / Price Text
+                    </label>
+                    <input
+                      type="text"
+                      value={productData.saleText}
+                      onChange={(e) =>
+                        setProductData({
+                          ...productData,
+                          saleText: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. 50% Off or Rs 999"
+                      className="w-full border border-gray-200 p-2 text-sm"
+                      required={productData.isOnSale}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -1106,9 +1191,14 @@ const AdminDashboard = () => {
                           className="w-full h-full object-contain mix-blend-multiply"
                         />
                       </div>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {prod.name}
-                      </p>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {prod.name}
+                        </p>
+                        <p className="text-xs font-mono text-gray-500">
+                          {prod.category} {prod.isOnSale ? " • (ON SALE)" : ""}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex gap-2">
                       <button

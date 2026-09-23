@@ -1,32 +1,50 @@
 import { useState, useEffect } from "react";
 import { Loader2, X, MessageCircle } from "lucide-react";
 
+const categories = [
+  "All",
+  "Skincare",
+  "Healthcare",
+  "Haircare",
+  "Oriflame Special Edition Accessories",
+];
+
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // TODO: Replace with your Aunt's WhatsApp number (include country code, no + or spaces)
+  const PHONE_NUMBER = "919876543210";
 
   useEffect(() => {
     fetch("http://localhost:5000/api/products")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
       .then((data) => {
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+        setProducts([]);
         setLoading(false);
       });
   }, []);
 
-  const closeModal = (e) => {
-    if (e.target.id === "modal-overlay") {
-      setSelectedProduct(null);
-    }
-  };
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
 
-  // Replace this with your aunt's actual WhatsApp number (Country code + Number, no '+')
-  const whatsappNumber = "919883683307";
+  const handleEnquire = (product) => {
+    const message = `Hi Tanusree! I'm interested in the Oriflame product: *${product.name}*. Is it available?`;
+    const whatsappUrl = `https://wa.me/${919883683307}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
   if (loading) {
     return (
@@ -37,102 +55,147 @@ const ProductsPage = () => {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 relative">
+    <div className="space-y-12 animate-in fade-in duration-500 pb-20">
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900">
           Available Products
         </h1>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 mt-2 font-mono">
           Current inventory in my personal collection.
         </p>
       </div>
 
-      {products.length === 0 ? (
+      {/* Category Filter */}
+      <div className="flex flex-wrap gap-2 pb-4 border-b border-gray-100">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-3 py-1.5 text-xs font-mono transition-colors border ${
+              selectedCategory === category
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-900"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Product Grid */}
+      {filteredProducts.length === 0 ? (
         <div className="text-center py-20 border border-gray-200 bg-gray-50">
           <p className="text-sm text-gray-500 font-mono">
-            Inventory is currently empty.
+            No products found in this category.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {products.map((product) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProducts.map((product) => (
             <div
               key={product._id}
               onClick={() => setSelectedProduct(product)}
-              className="group cursor-pointer flex flex-col border border-gray-200 bg-white hover:border-gray-900 transition-colors p-3"
+              className="border border-gray-200 bg-white group hover:border-gray-400 transition-colors flex flex-col pb-2 cursor-pointer"
             >
-              <div className="relative aspect-square mb-3 bg-gray-100 overflow-hidden border border-gray-100 p-2">
+              <div className="relative w-full aspect-square bg-gray-50 border-b border-gray-100 p-6 flex justify-center items-center">
+                {product.isOnSale && (
+                  <div className="absolute top-3 left-3 bg-gray-900 text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1 shadow-sm">
+                    SALE
+                  </div>
+                )}
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <h3 className="font-semibold text-sm text-gray-900 line-clamp-1 group-hover:text-gray-600">
-                {product.name}
-              </h3>
-              <span className="text-xs font-mono text-green-700 mt-1">
-                {product.priceText}
-              </span>
+
+              <div className="p-4 flex flex-col">
+                <h3 className="font-bold text-gray-900 text-sm group-hover:text-blue-600 transition-colors">
+                  {product.name}
+                </h3>
+
+                {product.isOnSale ? (
+                  <p className="text-xs font-mono text-gray-900 font-semibold mt-1">
+                    {product.saleText}
+                  </p>
+                ) : (
+                  <p className="text-xs font-mono text-emerald-600 mt-1">
+                    Lower than the market
+                  </p>
+                )}
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* --- REDESIGNED MODAL OVERLAY --- */}
+      {/* Product Detail Modal Overlay */}
       {selectedProduct && (
         <div
-          id="modal-overlay"
-          onClick={closeModal}
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 md:p-6 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setSelectedProduct(null)}
         >
-          {/* Wider, side-by-side layout for desktop */}
-          <div className="bg-white max-w-3xl w-full flex flex-col md:flex-row border border-gray-200 shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 relative">
-            <button
-              onClick={() => setSelectedProduct(null)}
-              className="absolute top-4 right-4 z-10 bg-white border border-gray-200 p-1.5 hover:bg-gray-100 transition-colors shadow-sm"
-            >
-              <X className="w-4 h-4 text-gray-900" />
-            </button>
-
-            {/* Left Side: Image container (keeps proportions constrained) */}
-            <div className="w-full md:w-1/2 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200 p-8 flex items-center justify-center relative min-h-[250px]">
-              <img
-                src={selectedProduct.imageUrl}
-                alt={selectedProduct.name}
-                className="w-full max-h-[300px] object-contain mix-blend-multiply"
-              />
+          <div
+            className="bg-white border border-gray-200 shadow-xl max-w-lg w-full max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-4 border-b border-gray-100">
+              <h3 className="font-bold text-gray-900">
+                {selectedProduct.name}
+              </h3>
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="text-gray-400 hover:text-gray-900 p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* Right Side: Text & Actions */}
-            <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 pr-8 leading-tight">
-                {selectedProduct.name}
-              </h2>
-
-              <div className="mb-6">
-                <span className="inline-block text-xs font-mono text-green-700 bg-green-50 px-2 py-1 border border-green-200">
-                  {selectedProduct.priceText}
-                </span>
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
+              <div className="relative w-full bg-gray-50 border border-gray-100 p-6 flex justify-center items-center mb-6">
+                {selectedProduct.isOnSale && (
+                  <div className="absolute top-3 left-3 bg-gray-900 text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1 shadow-sm">
+                    SALE
+                  </div>
+                )}
+                <img
+                  src={selectedProduct.imageUrl}
+                  alt={selectedProduct.name}
+                  className="w-48 h-48 object-contain mix-blend-multiply"
+                />
               </div>
 
-              {/* Scrollable description area to prevent modal from getting too tall */}
-              <div className="flex-grow overflow-y-auto max-h-[200px] md:max-h-[300px] pr-2 mb-8 custom-scrollbar">
+              <div className="mb-6">
+                {selectedProduct.isOnSale ? (
+                  <p className="text-sm font-mono text-gray-900 font-semibold mb-3">
+                    Price: {selectedProduct.saleText}
+                  </p>
+                ) : (
+                  <p className="text-sm font-mono text-emerald-600 mb-3">
+                    Price: Lower than the market
+                  </p>
+                )}
+
+                <h4 className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2">
+                  Description
+                </h4>
                 <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
                   {selectedProduct.description}
                 </p>
               </div>
 
-              {/* Dynamic WhatsApp Link Button */}
-              <a
-                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi Tanusree, I would like to enquire about the ${selectedProduct.name} from your collection.`)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-auto flex items-center justify-center gap-2 w-full bg-[#25D366] text-white py-3 text-sm font-semibold hover:bg-[#20bd5a] transition-colors"
+              {/* Action Button */}
+              <button
+                onClick={() => handleEnquire(selectedProduct)}
+                className="w-full flex justify-center items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white py-3 text-sm font-semibold transition-colors"
               >
-                <MessageCircle className="w-4 h-4" />
-                Enquire on WhatsApp
-              </a>
+                <MessageCircle className="w-4 h-4" /> Enquire Now via WhatsApp
+              </button>
             </div>
           </div>
         </div>

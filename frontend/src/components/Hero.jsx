@@ -31,7 +31,6 @@ const Hero = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        {/* Removed borders, backgrounds, and shadows entirely so only the raw image renders */}
         <div className="w-36 h-36">
           <img
             src="/proflie.png"
@@ -48,12 +47,24 @@ const Hero = () => {
           </p>
         </div>
       </div>
-
-      <p className="text-sm leading-relaxed text-gray-600 max-w-2xl">
-        Sharing authentic beauty, skincare knowledge, and wellness journeys.
-        Empowering individuals through Oriflame products and flexible business
-        opportunities.
-      </p>
+      <div className="space-y-3 max-w-2xl">
+        <p className="text-sm leading-relaxed text-gray-600 max-w-2xl">
+          Sharing authentic beauty, skincare knowledge, and wellness journeys.
+          Empowering individuals through Oriflame products and flexible business
+          opportunities.
+        </p>
+        <p className="text-base font-bold text-gray-900">
+          Want to join Oriflame ? Click{" "}
+          <a
+            href="https://shop.oriflame.com/IN-347508tanusreebandyapadhyay/csxyoy9Ua"
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-2 underline-offset-4 decoration-gray-300 hover:decoration-gray-900 transition-all"
+          >
+            here
+          </a>
+        </p>
+      </div>
 
       <div className="flex flex-wrap items-center gap-6 pt-1">
         <div className="flex items-center gap-4 text-gray-600">
@@ -67,7 +78,7 @@ const Hero = () => {
             <YoutubeIcon />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/tanusreesbeautyandbusiness/?utm_source=ig_web_button_share_sheet"
             target="_blank"
             rel="noreferrer"
             className="hover:text-gray-900 transition-colors"
@@ -76,7 +87,7 @@ const Hero = () => {
             <InstagramIcon />
           </a>
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/share/1Bwb1ivHka/"
             target="_blank"
             rel="noreferrer"
             className="hover:text-gray-900 transition-colors"
