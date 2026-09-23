@@ -54,9 +54,14 @@ const Footer = () => {
         {/* Center: Author Text */}
         <div className="flex-1 text-center whitespace-nowrap">
           built and maintained by{" "}
-          <span className="underline underline-offset-2 decoration-gray-300">
+          <a
+            href="https://portfolio-kallol-ju.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline underline-offset-2 decoration-gray-300 hover:decoration-gray-900 hover:text-gray-900 transition-all"
+          >
             Kallol
-          </span>
+          </a>
         </div>
 
         {/* Right: Copyright */}
