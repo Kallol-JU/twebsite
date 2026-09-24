@@ -111,11 +111,14 @@ const AdminDashboard = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/admin/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        },
+      );
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("adminToken", data.token);
